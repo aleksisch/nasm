@@ -15,9 +15,9 @@ elf:   object
 	@ld -s -o $(OUT) $(OBJ) 
 	@chmod +x $(OUT)
 
-debug:
-	@nasm -g -f elf -o debug.obj -l debug.list ASM
-	@ld -m elf_i386 -o debug -p  debug.obj
+debug: clean
+	@nasm -ggdb -f elf64 -o debug.obj -l debug.list $(ASM)
+	@ld -o debug  debug.obj
 
 
 clean:

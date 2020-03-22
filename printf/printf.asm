@@ -1,11 +1,14 @@
+SECTION .bss
+
 SECTION .data
 
 tmp_string  times 64 db '0'
 counter     dw 0
 tmp_byte    db "0"
-msg         db "Hello, world! %c %s %b %d %x %o %%", 0xa, 0x0
+msg         db "Hello, world! %b", 0xa, "%b", 0xa, "%b", 0xa,"%b", 0xa, 0x0
+string      db "I %s %x %d %% %c%b", 0xa, 0x0
 len         equ $ - msg
-mes		    db "Text to screen", 0
+mes		    db "love", 0
 buff_size   equ 512
 buff 	    times buff_size db 0
 
@@ -15,10 +18,13 @@ global _start
 _start:              
 
     mov rsi, msg
-    mov r10, 1024
-    times 4 push r10
-    push mes
-    push 53
+    xor rax, rax
+    mov ax, cs
+    push rax
+    mov ax, ss
+    push rax
+    mov ax, ds
+    push rax
     call printf
     mov eax, 1
     mov ebx, 0
