@@ -1,4 +1,4 @@
-FILENAME = printf
+FILENAME = hack
 ASM = $(FILENAME).asm
 OBJ = $(FILENAME).obj
 LST = $(FILENAME).lst
