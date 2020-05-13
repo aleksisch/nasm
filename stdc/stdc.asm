@@ -78,6 +78,7 @@ memchr:
 ;=================================
 
 memset:
+	cld
 	rep stosb
 	ret
 
@@ -91,6 +92,7 @@ memset:
 ;=================================
 		
 memcpy:
+	cld
 	rep movsb 
 	ret
 
@@ -125,6 +127,7 @@ strlen:
 ;=================================
 
 memcmp:
+	cld
 	repe cmpsb
 	ret
 
