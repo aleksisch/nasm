@@ -154,12 +154,9 @@ strchr proc
 		cmp al, 00h
 			je @@end
 		cmp ah, al
-			je @@end
-		jmp @@Search
-
-	@@end:
-		dec di
-		ret
+			jne @@Search
+	dec di
+	ret
 	endp
 
 ;=================================
