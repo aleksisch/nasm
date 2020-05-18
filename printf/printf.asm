@@ -24,6 +24,7 @@ _start:
     mov ax, 11
     push rax
     call printf
+    sub rsp, rsi	
     mov eax, 1
     mov ebx, 0
     int 0x80
@@ -37,6 +38,8 @@ _start:
 ;
 ;=======================================================
 printf:
+	push rbp
+	mov rbp, rsp
 	xor r14, r14					;counter
 	.Loop:
 
@@ -45,11 +48,9 @@ printf:
 		cmp byte [rsi], '%'			;Argument
 			jne .Print_char
 		
-		inc r14
+		add r14, 8
 		mov r15, rsp				;current variable
-		shl r14, 3
 		add r15, r14
-		shr r14, 3
 		mov r15, [r15]
 		push rsi
 		call GetArgs
@@ -66,8 +67,11 @@ printf:
 			inc rsi
 			jmp .Loop
 	.End:
-		call PrintAllBuff
-		ret
+	call PrintAllBuff
+
+	leave
+	mov rsi, r14
+	ret
 
 ;=======================================================
 ;	Input: 		r15 - argument

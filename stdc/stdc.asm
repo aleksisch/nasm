@@ -60,6 +60,8 @@ Test2:
 ;			cx - max size of memory
 ;
 ;Return: 	di - ptr to byte
+;
+;Destroy:   cx
 ;=================================
 
 memchr:
@@ -75,6 +77,8 @@ memchr:
 ;			cx - number of byte
 ;			al - value
 ;Return: 	di - ptr to str
+;
+;Destroy:   cx
 ;=================================
 
 memset:
@@ -89,6 +93,8 @@ memset:
 ;			al - value
 ;
 ;Return: 	di - ptr to str
+;
+;Destroy:   cx, si
 ;=================================
 		
 memcpy:
@@ -101,8 +107,7 @@ memcpy:
 ;
 ;Return: 	cx - strlen
 ;
-;Reset: 	di to end of line
-;			al
+;Destroy: 	di,al
 ;=================================
 	
 strlen:
@@ -124,6 +129,8 @@ strlen:
 ;			si - ptr to mem
 ;			cx - max size to cmp
 ;Return: 	si cmp with di, result in flag
+;
+;Destroy:   cx, si, di
 ;=================================
 
 memcmp:
@@ -135,6 +142,8 @@ memcmp:
 ;Arg:		di - ptr to mem (receive)
 ;			al - char
 ;Return: 	di - memory ptr
+;
+;Destroy:   ax
 ;=================================
 
 strchr proc
@@ -157,7 +166,8 @@ strchr proc
 ;Arg:		si - ptr to mem (receive)
 ;			al - char
 ;Return: 	si - memory ptr
-;Reset: 	si
+;
+;Destroy:   ax, di
 ;=================================
 
 strrchr proc
@@ -168,28 +178,30 @@ strrchr proc
 		cmp al, 00h
 			je @@end
 		cmp ah, al
-			je @@DecLabel
+			je @@Dec
 		jmp @@Loop
 
 	@@end:
 		mov si, di
-		dec si 
+		dec si
 		ret
 
-	@@DecLabel:
+	@@Dec:
 		mov di, si
 		jmp @@Loop
 	endp
 
 ;=================================
-;Arg:		si - ptr to mem (receive)
+;Arg:		di - ptr to mem (receive)
 ;			al - char
 ;Return: 	si - memory ptr
-;Reset: 	si
+;Destroy: 	cx, di, ax
 ;=================================
 
 strrchr2:
+	mov ah, al
 	call strlen
+	mov al, ah
 	std
 	repne scasb
 	inc di
@@ -199,7 +211,7 @@ strrchr2:
 ;Arg:		di - ptr to mem (receive)
 ;			si - ptr to mem (transmit)
 ;
-;Reset 		cx - change to strlen si
+;Destroy: 	cx, si, di
 ;=================================
 	
 strcpy proc
@@ -218,7 +230,8 @@ strcpy proc
 ;Arg:		di - ptr to mem 
 ;			si - ptr to mem 
 ;
-;Reset:		ax
+;Destroy:	si, di
+;Return:    result in flags
 ;=================================
 	
 strcmp proc
